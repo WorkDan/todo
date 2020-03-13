@@ -7,9 +7,10 @@ jobs:
         environment:
           RAILS_ENV: test
           DB_HOST: 127.0.0.1
-      - image: circleci/postgres:9.5.18-alpine
+      - image: circleci/circleci/postgres:9.6
         environment:
           DB_HOST: 127.0.0.1
+          POSTGRES_PASSWORD: password
     steps:
       - checkout
       - restore_cache:
