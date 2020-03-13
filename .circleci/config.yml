@@ -35,3 +35,21 @@ jobs:
           when: always
           command: |
             bundle exec rspec
+  deploy:
+    machine:
+        enabled: true
+    working_directory: ~/circleci-demo-workflows
+    environment:
+      HEROKU_APP: "peaceful-fortress-84450"
+    steps:
+      - checkout
+      - run:
+          name: Setup Heroku
+          command: bash .circleci/setup-heroku.sh
+
+      - run:
+          command: |
+            git push heroku development:master
+            heroku run rake db:migrate
+            sleep 5
+            heroku restart
