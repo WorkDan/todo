@@ -1,7 +1,7 @@
 module Api
   module V1
     class TaskSerializer < ActiveModel::Serializer
-      attributes :title
+      attributes :title, :status
 
       belongs_to :project
     end

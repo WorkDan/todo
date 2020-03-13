@@ -3,7 +3,11 @@ Rails.application.routes.draw do
   namespace :api, format: :json do
     namespace :v1 do
       resources :projects do
-        resources :tasks
+        resources :tasks do
+          collection do
+            post :done
+          end
+        end
       end
     end
   end

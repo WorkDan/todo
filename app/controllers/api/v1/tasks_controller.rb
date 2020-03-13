@@ -41,6 +41,14 @@ module Api
         task.destroy!
       end
 
+      def done
+        task = project.tasks.find(params[:id])
+
+        task.done!
+
+        render json: [task], each_serializer: ::Api::V1::TaskSerializer, status: :ok
+      end
+
       private
 
       def project

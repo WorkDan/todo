@@ -33,7 +33,8 @@ resource "Tasks" do
                   id: Task.first.id.to_s,
                   type: "tasks",
                   attributes: {
-                    title: Task.first.title
+                    title: Task.first.title,
+                    status: "created"
                   },
                   relationships: {
                     project: {
@@ -48,7 +49,8 @@ resource "Tasks" do
                   id: Task.last.id.to_s,
                   type: "tasks",
                   attributes: {
-                    title: Task.last.title
+                    title: Task.last.title,
+                    status: "created"
                   },
                   relationships: {
                     project: {
@@ -131,7 +133,8 @@ resource "Tasks" do
               type: "tasks",
               id: task.id.to_s,
               attributes: {
-                title: task.title
+                title: task.title,
+                status: "created"
               },
               relationships: {
                 project: {
@@ -230,7 +233,8 @@ resource "Tasks" do
             id: Task.last.id.to_s,
             type: "tasks",
             attributes: {
-              title: "New task"
+              title: "New task",
+              status: "created"
             },
             relationships: {
               project: {
@@ -313,7 +317,8 @@ resource "Tasks" do
             id: task.id.to_s,
             type: "tasks",
             attributes: {
-              title: "Updated title project"
+              title: "Updated title project",
+              status: "created"
             },
             relationships: {
               project: {
@@ -407,7 +412,7 @@ resource "Tasks" do
           errors: [{
             id: id.to_s,
             status: 404,
-            detail: "Couldn't find Task with 'id'=#{id}"
+            detail: "Couldn't find Task with 'id'=#{id} [WHERE \"tasks\".\"project_id\" = $1]"
           }]
         }
       end
@@ -425,4 +430,57 @@ resource "Tasks" do
       end
     end
   end
+
+  post "api/v1/projects/:project_id/tasks/done" do
+    parameter :id, "Task ID"
+
+    context "success" do
+      let(:project_id) { project.id }
+      let(:task) { create(:task, project: project) }
+
+      let(:params) do
+        {
+          id: task.id
+        }
+      end
+
+      let(:expected_response) do
+        {
+          data: [{
+            id: task.id.to_s,
+            type: "tasks",
+            attributes: {
+              title: task.title,
+              status: "done"
+            },
+            relationships: {
+              project: {
+                data: {
+                  id: project.id.to_s,
+                  type: "projects"
+                }
+              }
+            }
+          }]
+        }
+      end
+
+      example "returns status created" do
+        expect(task.created?).to eq true
+      end
+
+      example "returns 200" do
+        do_request(params)
+
+        expect(status).to eq 200
+      end
+
+      example "returns expected response" do
+        do_request(params)
+
+        expect(parsed_response_body).to eq expected_response
+      end
+    end
+  end
 end
+
