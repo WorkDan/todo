@@ -49,7 +49,7 @@ jobs:
 
       - run:
           command: |
-            git push heroku development:master
+            git push heroku develop:master
             heroku run rake db:migrate
             sleep 5
             heroku restart
