@@ -116,6 +116,58 @@ resource "Tasks" do
     end
   end
 
+  get "api/v1/projects/:project_id/tasks?sort=desc" do
+    let(:project_id) { project.id }
+    let!(:tasks) { create_list(:task, 2, project: project) }
+
+    context "returns sorting records by desc" do
+      let(:expected_response) do
+          {
+            data: [
+              {
+                id: Task.last.id.to_s,
+                type: "tasks",
+                attributes: {
+                  title: Task.first.title,
+                  status: "created"
+                },
+                relationships: {
+                  project: {
+                    data: {
+                      id: Project.first.id.to_s,
+                      type: "projects",
+                    }
+                  }
+                },
+              },
+              {
+                id: Task.first.id.to_s,
+                type: "tasks",
+                attributes: {
+                  title: Task.last.title,
+                  status: "created"
+                },
+                relationships: {
+                  project: {
+                    data: {
+                      id: Project.first.id.to_s,
+                      type: "projects",
+                    }
+                  }
+                },
+              },
+            ]
+          }
+      end
+
+      example "returns expected response" do
+        do_request
+
+        expect(parsed_response_body).to eq expected_response
+      end
+    end
+  end
+
   get "api/v1/projects/:project_id/tasks/:id" do
     parameter :project_id, "Project ID"
     parameter :id, "Task ID"

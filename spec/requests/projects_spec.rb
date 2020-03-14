@@ -82,6 +82,49 @@ resource "Projects" do
     end
   end
 
+  get "api/v1/projects?sort=desc" do
+    let!(:projects) { create_list(:project, 2) }
+
+    context "returns sorting records by desc" do
+      let(:expected_response) do
+        {
+          data: [
+            {
+              id: Project.last.id.to_s,
+              attributes: {
+                title: Project.last.title
+              },
+              relationships: {
+                tasks: {
+                  data: []
+                }
+              },
+              type: "projects",
+            },
+            {
+              id: Project.first.id.to_s,
+              attributes: {
+                title: Project.first.title
+              },
+              relationships: {
+                tasks: {
+                  data: []
+                }
+              },
+              type: "projects",
+            },
+          ]
+        }
+      end
+
+      example "returns expected response" do
+        do_request
+
+        expect(parsed_response_body).to eq expected_response
+      end
+    end
+  end
+
   get "api/v1/projects/:id" do
     context "success" do
       let(:project) { create(:project) }

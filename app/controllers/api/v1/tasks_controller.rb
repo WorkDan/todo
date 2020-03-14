@@ -4,7 +4,7 @@ module Api
       include Response
 
       def index
-        resources = project.tasks.all
+        resources = Tasks::Index.new(project, params).call
 
         render json: resources, each_serializer: ::Api::V1::TaskSerializer, status: :ok
       end
