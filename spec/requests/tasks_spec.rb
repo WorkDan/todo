@@ -325,7 +325,7 @@ resource "Tasks" do
         let(:expected_response) do
           {
             errors: [{
-              status: 422,
+              status: 400,
               detail: "can't be blank",
               source: {
                 pointer: "/data/attributes/title"
@@ -334,10 +334,10 @@ resource "Tasks" do
           }
         end
 
-        example "returns 422" do
+        example "returns 400" do
           do_request(params)
 
-          expect(status).to eq 422
+          expect(status).to eq 400
         end
 
         example "returns expected result" do
@@ -412,7 +412,7 @@ resource "Tasks" do
         let(:expected_response) do
           {
             errors: [{
-              status: 422,
+              status: 400,
               detail: "can't be blank",
               source: {
                 pointer: "/data/attributes/title"
@@ -421,10 +421,10 @@ resource "Tasks" do
           }
         end
 
-        example "returns 422" do
+        example "returns 400" do
           do_request(params)
 
-          expect(status).to eq 422
+          expect(status).to eq 400
         end
 
         example "returns expected result" do
@@ -469,7 +469,7 @@ resource "Tasks" do
         }
       end
 
-      example "returns 422" do
+      example "returns 400" do
         do_request
 
         expect(status).to eq 404

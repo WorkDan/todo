@@ -4,24 +4,24 @@ module Api
       include Response
 
       def index
-        resources = Projects::Index.new(params).call
+        projects = Projects::Index.new(params).call
 
-        render json: resources, each_serializer: project_serializer, status: :ok
+        render_success(resource: projects, status: :ok)
       end
 
       def show
-        resource = project_collection.find(project_params[:id])
+        project = project_collection.find(project_params[:id])
 
-        render json: [resource], each_serializer: project_serializer, status: :ok
+        render_success(resource: [project], status: :ok)
       end
 
       def create
         project = project_collection.new(project_params)
 
         if project.save
-          render json: [project], each_serializer: project_serializer, status: :created
+          render_success(resource: [project], status: :created)
         else
-          render_resource_errors(resource: project, status: :unprocessable_entity)
+          render_resource_errors(resource: project, status: :bad_request)
         end
       end
 
@@ -29,9 +29,9 @@ module Api
         project = project_collection.find(project_params[:id])
 
         if project.update(project_params)
-          render json: [project], each_serializer: project_serializer, status: :ok
+          render_success(resource: [project], status: :ok)
         else
-          render_resource_errors(resource: project, status: :unprocessable_entity)
+          render_resource_errors(resource: project, status: :bad_request)
         end
       end
 
@@ -49,10 +49,6 @@ module Api
 
       def project_collection
         Project
-      end
-
-      def project_serializer
-        ::Api::V1::ProjectSerializer
       end
     end
   end

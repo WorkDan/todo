@@ -6,22 +6,22 @@ module Api
       def index
         resources = Tasks::Index.new(project, params).call
 
-        render json: resources, each_serializer: ::Api::V1::TaskSerializer, status: :ok
+        render_success(resource: resources, status: :ok)
       end
 
       def show
         resource = project.tasks.find(task_params[:id])
 
-        render json: [resource], each_serializer: ::Api::V1::TaskSerializer, status: :ok
+        render_success(resource: [resource], status: :ok)
       end
 
       def create
         task = project.tasks.new(task_params)
 
         if task.save
-          render json: [task], each_serializer: ::Api::V1::TaskSerializer, status: :created
+          render_success(resource: [task], status: :created)
         else
-          render_resource_errors(resource: task, status: :unprocessable_entity)
+          render_resource_errors(resource: task, status: :bad_request)
         end
       end
 
@@ -29,9 +29,9 @@ module Api
         task = project.tasks.find(task_params[:id])
 
         if task.update(task_params)
-          render json: [task], each_serializer: ::Api::V1::TaskSerializer, status: :ok
+          render_success(resource: [task], status: :ok)
         else
-          render_resource_errors(resource: task, status: :unprocessable_entity)
+          render_resource_errors(resource: task, status: :bad_request)
         end
       end
 
@@ -46,7 +46,7 @@ module Api
 
         task.done!
 
-        render json: [task], each_serializer: ::Api::V1::TaskSerializer, status: :ok
+        render_success(resource: [task], status: :ok)
       end
 
       private
@@ -57,10 +57,6 @@ module Api
 
       def task_params
         params.permit(:id, :title, :project_id)
-      end
-
-      def task_collection
-        Task
       end
 
       def project_collection

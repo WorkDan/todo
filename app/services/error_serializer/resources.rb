@@ -4,7 +4,7 @@ module ErrorSerializer
       errors = resource.errors.messages.map do |field, errors|
         errors.map do |error_message|
           {
-            status: 422,
+            status: 400,
             source: {pointer: "/data/attributes/#{field}"},
             detail: error_message
           }
