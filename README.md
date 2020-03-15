@@ -417,4 +417,41 @@ DELETE /api/v1/projects/:project_id/tasks/:id
 200 Ok
 ```
 
+## Mark task as DONE
+### Query
+```
+POST /api/v1/projects/:project_id/tasks/done
+```
+```json
+{
+  "id": "1"
+}
+```
+| Field       | Required | Description |
+| ---------- |:------------:|:------------:|
+| `id`       | Yes           | Task ID|
+### Response
+```json
+200 Ok
+
+{
+  "data": [{
+    "id": "1",
+    "type": "tasks",
+    "attributes": {
+      "title": "Fix Bug",
+      "status": "done"
+    },
+    "relationships": {
+      "project": {
+        "data": {
+          "id": "1",
+          "type": "projects"
+        }
+      }
+    }
+  }]
+}
+```
+
 
