@@ -5,6 +5,10 @@ docker-compose up
 docker-compose exec web rake db:create
 docker-compose exec web rake db:migrate
 ```
+### App based on Heroku
+```
+https://peaceful-fortress-84450.herokuapp.com/api/v1/projects
+```
 
 # API Documentation
 ## Projects
